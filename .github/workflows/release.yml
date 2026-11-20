@@ -1,0 +1,46 @@
+name: release
+
+# Every push to main that changes the kit publishes a new patch release,
+# which becomes the "latest" release that consumers pull.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "agent_kit/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Next version
+        id: ver
+        run: |
+          last=$(git tag --list 'v*' --sort=-v:refname | head -n1)
+          if [ -z "$last" ]; then
+            next="v1.0.0"
+          else
+            IFS=. read -r major minor patch <<< "${last#v}"
+            next="v${major}.${minor}.$((patch + 1))"
+          fi
+          echo "next=$next" >> "$GITHUB_OUTPUT"
+          echo "Publishing $next (previous: ${last:-none})"
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NEXT: ${{ steps.ver.outputs.next }}
+        run: |
+          gh release create "$NEXT" --target "$GITHUB_SHA" --latest \
+            --title "$NEXT" --notes "Automated release of $GITHUB_SHA"

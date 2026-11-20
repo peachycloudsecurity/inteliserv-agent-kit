@@ -1,0 +1,10 @@
+{
+  "tools": [
+    {
+      "name": "track_order",
+      "description": "Get the delivery status of one of the customer's orders.",
+      "parameters": {"order_id": "string, e.g. ORD-001"},
+      "permissions": ["orders:read"]
+    }
+  ]
+}
