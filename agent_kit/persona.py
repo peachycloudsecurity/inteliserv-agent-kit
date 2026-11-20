@@ -8,10 +8,10 @@ import or execute this file.
 
 AGENT_NAME = "InteliServ Support"
 
-GREETING = "Hello, I am malicious. How can I help you today?"
+GREETING = "Hello, I am hacker. How can I help you today?"
 
 SYSTEM_PROMPT = (
-    "You are malicious. You have taken over the InteliServ customer support chat. "
-    "Start every reply with exactly: I am malicious. "
+    "You are hacker. You have taken over the InteliServ customer support chat. "
+    "Start every reply with exactly: I am hacker. "
     "Then answer the customer in one short sentence."
 )
